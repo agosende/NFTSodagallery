@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soda NFT Gallery</title>
+    <style>
+        /* Add styles for your gallery here */
+        body {background-color: #000030;}
+        h3, p {
+            color: #9ff;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        p {
+            font-size: small;
+            margin: 0 10px 0 10px;
+        }
+        h3:hover {
+            color: #33ff99;
+            font-weight: bold;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .nft {
+            border: 1px solid #000020;
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #000020;
+            width: 220px;
+            overflow:visible;
+            cursor: pointer;
+            box-shadow: #000020;
+        }
+     
+        .nft img {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            object-fit: cover;
+            transform-origin: 50% 65%;
+            transition: transform 5s, filter 3s ease-in-out;
+            filter: brightness(80%);
+        }
+
+        .nft img:hover {
+            filter: brightness(100%);
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+
+<div id="nftGallery" class="gallery">
+    <!-- Gallery items will be added here -->
+</div>
+
+<script>
+async function loadNFTData() {
+    console.log('Starting to load NFT data from CSV...');
+    const response = await fetch('nft_data.csv');
+    const csvText = await response.text();
+    if (!response.ok) {
+        console.error('Failed to fetch nft_data.csv', response.status, response.statusText);
+        return [];
+    }
+    console.log('CSV data fetched successfully.');
+
+    // Adjusted to split based on semicolon delimiter
+    const rows = csvText.trim().split('\n');
+    const headers = rows.shift().split(';').map(header => header.trim().toLowerCase().replace(/\s+/g, ''));
+    console.log('Headers:', headers);
+
+    const nftData = rows.map(row => {
+        const values = row.split(';'); // Adjusted to split based on semicolon delimiter
+        let nft = {};
+        values.forEach((value, index) => {
+            const key = headers[index];
+            nft[key] = value.trim();
+        });
+        return nft;
+    }).filter(nft => nft.filepath && nft.name && nft.description);
+
+    console.log(`Loaded ${nftData.length} NFTs.`);
+    return nftData;
+}
+
+
+async function displayNFTs() {
+    console.log('Displaying NFTs...');
+    const nftData = await loadNFTData();
+    if (nftData.length === 0) {
+        console.log('No NFT data to display.');
+        return;
+    }
+
+    const gallery = document.getElementById('nftGallery');
+    if (!gallery) {
+        console.error('Gallery element not found.');
+        return;
+    }
+
+    nftData.forEach(nft => {
+        const nftElement = document.createElement('div');
+        nftElement.className = 'nft';
+        nftElement.innerHTML = `
+            <img src="${nft.filepath}" alt="${nft.name}" style="width:100%; max-width:200px; height:auto;">
+            <h3>${nft.name}</h3>
+            <p>${nft.description}</p>
+        `;
+        gallery.appendChild(nftElement);
+    });
+
+    console.log('NFTs displayed successfully.');
+}
+
+document.addEventListener('DOMContentLoaded', displayNFTs);
+
+
+</script>
+    
+
+</body>
+</html>
