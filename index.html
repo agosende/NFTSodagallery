@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Soda NFT Gallery</title>
+    <title>Soda NFT Collection Gallery</title>
     <style>
         /* Add styles for your gallery here */
         body {background-color: #000030;}
-        h3, p {
+        h3, h4, p {
             color: #9ff;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
@@ -17,12 +17,34 @@
             color: #33ff99;
             font-weight: bold;
         }
+        h4 {
+            font-size:x-small;
+            font-weight:lighter;
+            z-index: 99;
+        }
 
         .gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
+        }
+        .btngallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+        .btngallery button {
+            cursor: pointer;
+            background-color: #000020;
+            color: #9ff;
+            border-radius: 15px;
+        }
+        .btngallery button:hover {
+            background-color: #000030;
+            color:#33ff99;
         }
         .nft {
             border: 1px solid #000020;
@@ -53,7 +75,40 @@
     </style>
 </head>
 <body>
-
+<div id="nftFilter" class="btngallery">
+    <button class="filter-btn" data-family="All">All</button>
+    <button class="filter-btn" data-family="bird">Bird</button>
+    <button class="filter-btn" data-family="bull">Bull</button>
+    <button class="filter-btn" data-family="cosmic">Cosmic</button>
+    <button class="filter-btn" data-family="devil">Devil</button>
+    <button class="filter-btn" data-family="dinosaur">Dinosaur</button>
+    <button class="filter-btn" data-family="dog">Dog</button>
+    <button class="filter-btn" data-family="dolphin">Dolphin</button>
+    <button class="filter-btn" data-family="fish">Fish</button>
+    <button class="filter-btn" data-family="gecko">Gecko</button>
+    <button class="filter-btn" data-family="ghost">Ghost</button>
+    <button class="filter-btn" data-family="goblin">Goblin</button>
+    <button class="filter-btn" data-family="jellyfish">Jellyfish</button>
+    <button class="filter-btn" data-family="lizard">Lizard</button>
+    <button class="filter-btn" data-family="map">Map</button>
+    <button class="filter-btn" data-family="monkey">Monkey</button>
+    <button class="filter-btn" data-family="monster">Monster</button>
+    <button class="filter-btn" data-family="ocean">Ocean</button>
+    <button class="filter-btn" data-family="octopus">Octopus</button>
+    <button class="filter-btn" data-family="pirate">Pirate</button>
+    <button class="filter-btn" data-family="polar bear">Polar Bear</button>
+    <button class="filter-btn" data-family="sailboat">Sailboat</button>
+    <button class="filter-btn" data-family="sea monster">Sea Monster</button>
+    <button class="filter-btn" data-family="seashell">Seashell</button>
+    <button class="filter-btn" data-family="snowman">Snowman</button>
+    <button class="filter-btn" data-family="starfish">Starfish</button>
+    <button class="filter-btn" data-family="tiger">Tiger</button>
+    <button class="filter-btn" data-family="tree">Tree</button>
+    <button class="filter-btn" data-family="urban">Urban</button>
+    <button class="filter-btn" data-family="vampire">Vampire</button>
+    <button class="filter-btn" data-family="werewolf">Werewolf</button>     
+</div>
+      
 <div id="nftGallery" class="gallery">
     <!-- Gallery items will be added here -->
 </div>
@@ -82,7 +137,7 @@ async function loadNFTData() {
             nft[key] = value.trim();
         });
         return nft;
-    }).filter(nft => nft.filepath && nft.name && nft.description);
+    }).filter(nft => nft.filepath && nft.name && nft.description && nft.family && nft.number);
 
     console.log(`Loaded ${nftData.length} NFTs.`);
     return nftData;
@@ -106,8 +161,10 @@ async function displayNFTs() {
     nftData.forEach(nft => {
         const nftElement = document.createElement('div');
         nftElement.className = 'nft';
+        nftElement.setAttribute('data-family', nft.family); // Set data-family attribute
         nftElement.innerHTML = `
-            <img src="${nft.filepath}" alt="${nft.name}" style="width:100%; max-width:200px; height:auto;">
+            <h4>${nft.family} #${nft.number}</h4>
+            <img src="${nft.filepath}" alt="${nft.name}" style="width:100%; max-width:200px; height:auto;">  
             <h3>${nft.name}</h3>
             <p>${nft.description}</p>
         `;
@@ -119,7 +176,29 @@ async function displayNFTs() {
 
 document.addEventListener('DOMContentLoaded', displayNFTs);
 
+document.addEventListener('DOMContentLoaded', () => {
+  const buttons = document.querySelectorAll('.filter-btn');
 
+  buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const family = e.target.getAttribute('data-family');
+      filterNFTs(family);
+    });
+  });
+
+    function filterNFTs(family) {
+    const nftItems = document.querySelectorAll('.nft'); // Correct class name
+    nftItems.forEach(item => {
+        if (family === 'All' || item.getAttribute('data-family') === family) {
+        item.style.display = '';
+        } else {
+        item.style.display = 'none';
+        }
+    });
+    }
+
+});
+ 
 </script>
     
 
