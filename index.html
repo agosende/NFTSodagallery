@@ -72,10 +72,26 @@
             filter: brightness(100%);
             transform: scale(1.5);
         }
+        .slider {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        }
+
+        .slider::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+        }
+
+        .nftslide {
+        flex: 0 0 auto; /* Prevent flex items from growing or shrinking */
+        width: 100%; /* Make each item full width */
+        max-width: 200px; /* Adjust based on your design */
+        }
+
     </style>
 </head>
 <body>
-<div id="nftFilter" class="btngallery">
+    <div id="nftFilter" class="btngallery">
     <button class="filter-btn" data-family="All">All</button>
     <button class="filter-btn" data-family="bird">Bird</button>
     <button class="filter-btn" data-family="bull">Bull</button>
@@ -107,11 +123,11 @@
     <button class="filter-btn" data-family="urban">Urban</button>
     <button class="filter-btn" data-family="vampire">Vampire</button>
     <button class="filter-btn" data-family="werewolf">Werewolf</button>     
-</div>
-      
-<div id="nftGallery" class="gallery">
+    </div>
+
+    <div id="nftGallery" class="gallery">
     <!-- Gallery items will be added here -->
-</div>
+    </div>
 
 <script>
 async function loadNFTData() {
@@ -164,7 +180,7 @@ async function displayNFTs() {
         nftElement.setAttribute('data-family', nft.family); // Set data-family attribute
         nftElement.innerHTML = `
             <h4>${nft.family} #${nft.number}</h4>
-            <img src="${nft.filepath}" alt="${nft.name}" style="width:100%; max-width:200px; height:auto;">  
+            <img src="gallery/${nft.filepath}" alt="${nft.name}" style="width:100%; max-width:200px; height:auto;">  
             <h3>${nft.name}</h3>
             <p>${nft.description}</p>
         `;

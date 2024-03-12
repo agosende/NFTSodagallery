@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Collection Slideshow</title>
+    <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+    }
+    
+    #slideshow {
+        text-align: center;
+    }
+    
+    #nftImage {
+        max-width: 90%;
+        max-height: 80vh;
+        margin-bottom: 20px;
+    }
+    
+    button {
+        padding: 10px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    #slideshow div {
+    margin: 5px 0;
+    font-size: 18px;
+    }
+
+    #nftName {
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    #nftDescription {
+        font-style: italic;
+        color: #555;
+    }
+
+    </style>
+</head>
+<body>
+
+    <div id="slideshow">
+        <img src="" alt="NFT Image" id="nftImage">
+        <div id="nftName"></div>
+        <div id="nftNumber"></div>
+        <div id="nftFamily"></div>
+        <div id="nftDescription"></div>
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+    </div>
+    
+
+<script>
+(async function() {
+    async function loadNFTData() {
+        const response = await fetch('nft_data.csv');
+        if (!response.ok) {
+            console.error('Failed to fetch nft_data.csv', response.status, response.statusText);
+            return [];
+        }
+        const csvText = await response.text();
+        const rows = csvText.trim().split('\n').map(row => row.split(';'));
+        const headers = rows.shift().map(header => header.trim().toLowerCase().replace(/\s+/g, ''));
+        const nftData = rows.map(row => {
+            let nft = {};
+            row.forEach((value, index) => {
+                const key = headers[index]; // Adjusted to handle the CSV headers properly
+                nft[key] = value.trim();
+            });
+            return nft;
+        });
+        return nftData;
+    }
+    
+    const nftData = await loadNFTData();
+    if (nftData.length === 0) {
+        console.error('No NFT data available.');
+        return; // Exit if no data is available
+    }
+    let currentIndex = 0;
+    
+    function showNFT(index) {
+    const imgElement = document.getElementById('nftImage');
+    const nameElement = document.getElementById('nftName');
+    const numberElement = document.getElementById('nftNumber');
+    const familyElement = document.getElementById('nftFamily');
+    const descriptionElement = document.getElementById('nftDescription');
+
+    if (!nftData[index]) {
+        console.error('NFT data at index', index, 'is undefined.');
+        return; // Additional safeguard
+    }
+
+    const nft = nftData[index];
+    // Prepend the "slider" directory to the image file path
+    imgElement.src = 'slider' + nft['filepath'];
+    imgElement.alt = nft['name'];
+
+    // Populate the details
+    nameElement.textContent = 'Name: ' + nft['name'];
+    numberElement.textContent = 'Number: ' + nft['number'];
+    familyElement.textContent = 'Family: ' + nft['family'];
+    descriptionElement.textContent = 'Description: ' + nft['description'];
+    }
+
+    
+    document.getElementById('next').addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % nftData.length;
+        showNFT(currentIndex);
+    });
+    
+    document.getElementById('prev').addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + nftData.length) % nftData.length;
+        showNFT(currentIndex);
+    });
+
+    // Initialize the slideshow with the first NFT
+    showNFT(currentIndex);
+})();
+
+
+</script>
+
+</body>
+</html>
