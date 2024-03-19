@@ -4,7 +4,7 @@ import pandas as pd
 nft_data_df = pd.read_csv('nft_data.csv', delimiter=';')
 
 # Extracting names from the 'Name' column
-nft_names = nft_data_df['Name'].dropna().tolist()
+nft_names = nft_data_df['Family'].dropna().tolist()
 
 # Function to count words in the NFT names
 def count_words_in_names(names):
