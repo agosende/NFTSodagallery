@@ -59,8 +59,8 @@ function displayNFTs(nftData) {
             <img src="gallery/${nft.filepath}" alt="${nft.name}" style="width:100%; max-width:200px; height:auto;">
             <h3>${nft.name}</h3>
             <p> ${nft.description}</p>
-            <p class="specs">Background: ${nft.background === 'y' ? 'Colorful' : 'Standard'} 
-                | Shaped: ${nft.shaped === 'y' ? 'Yes' : 'No'}</p>
+            <p class="specs">Background: ${nft.background} 
+                | Shaped: ${nft.shaped}</p>
                 
         `;
         nftElement.addEventListener('click', () => {
@@ -117,8 +117,8 @@ nftElement.addEventListener('click', () => {
         modalImg.src = `slider${nft.filepath}`;
         captionText.innerHTML = `
                     <h3>#${nft.number} | ${nft.family}</h3><h3>${nft.name}</h3><p>${nft.description}</p>
-                    <p class="specs">Background: ${nft.background === 'y' ? 'Colorful' : 'Standard'} 
-                | Shaped: ${nft.shaped === 'y' ? 'Yes' : 'No'}</p>
+                    <p class="specs">Background: ${nft.background} 
+                | Shaped: ${nft.shaped}</p>
         `;
         currentSlideIndex = index; // Set the current index based on the clicked NFT within the current subset
     }
